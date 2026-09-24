@@ -1,0 +1,100 @@
+syntax = "proto3";
+option go_package = "github.com/csuJudge/reportProto/query";
+
+package oj.report;
+
+import "common/analytics_common.proto";
+
+service ReportQueryServer {
+    // QueryEvents 查询通用事件
+    rpc QueryEvents(QueryEventsReq) returns (QueryEventsRsp) {}
+    // QueryProblemEnterEvents 查询进入题目事件
+    rpc QueryProblemEnterEvents(QueryProblemEnterEventsReq) returns (QueryProblemEnterEventsRsp) {}
+    // QuerySolutionSubmittedEvents 查询提交事件
+    rpc QuerySolutionSubmittedEvents(QuerySolutionSubmittedEventsReq) returns (QuerySolutionSubmittedEventsRsp) {}
+}
+
+message QueryEventsReq {
+    string eventName = 1;  // 事件名
+    int32 eventVersion = 2; // 事件结构版本
+    string startTime = 3;  // 开始时间
+    string endTime = 4;    // 结束时间
+    repeated int32 createdBy = 5; // 用户编号列表
+    repeated string reporter = 6; // 上报来源
+    repeated EventPayloadFilter payloadFilters = 7; // payload 过滤条件
+    bool includePayload = 8; // 是否返回 payload
+    int32 offset = 9;      // 偏移量
+    int32 limit = 10;      // 每页数量
+}
+
+message QueryEventsRsp {
+    string message = 1; // 返回信息
+    int32 code = 2;     // 返回码
+    repeated EventRecord events = 3; // 事件列表
+    int32 total = 4;    // 总数
+}
+
+message QueryProblemEnterEventsReq {
+    string startTime = 1; // 开始时间
+    string endTime = 2;   // 结束时间
+    repeated int32 createdBy = 3; // 用户编号
+    repeated int32 problemID = 4; // 题目编号
+    string entrySource = 5; // 进入来源
+    repeated string recommendationID = 6; // 推荐批次编号
+    int32 offset = 7; // 偏移量
+    int32 limit = 8;  // 每页数量
+}
+
+message ProblemEnterEvent {
+    string eventID = 1;          // 事件编号
+    string occurredAt = 2;       // 进入时间
+    int32 createdBy = 3;         // 用户编号
+    int32 problemID = 4;         // 题目编号
+    string entrySource = 5;      // 进入来源
+    string recommendationID = 6; // 推荐批次编号
+    int32 contestID = 7;         // 作业或竞赛编号
+    int32 courseID = 8;          // 课程编号
+    string reporter = 9;         // 上报来源
+    string payload = 10;         // 事件业务字段
+}
+
+message QueryProblemEnterEventsRsp {
+    string message = 1; // 返回信息
+    int32 code = 2;     // 返回码
+    repeated ProblemEnterEvent events = 3; // 进入题目事件
+    int32 total = 4;    // 总数
+}
+
+message QuerySolutionSubmittedEventsReq {
+    string startTime = 1; // 开始时间
+    string endTime = 2;   // 结束时间
+    repeated int32 createdBy = 3; // 用户编号
+    repeated int32 problemID = 4; // 题目编号
+    repeated int32 solutionID = 5; // 提交编号
+    repeated int32 contestID = 6; // 作业或竞赛编号
+    int32 minAttemptSeq = 7; // 最小提交序号
+    int32 maxAttemptSeq = 8; // 最大提交序号
+    int32 offset = 9; // 偏移量
+    int32 limit = 10; // 每页数量
+}
+
+message SolutionSubmittedEvent {
+    string eventID = 1;    // 事件编号
+    string occurredAt = 2; // 提交时间
+    int32 createdBy = 3;   // 用户编号
+    int32 problemID = 4;   // 题目编号
+    int32 solutionID = 5;  // 提交编号
+    int32 attemptSeq = 6;  // 第几次提交
+    int32 contestID = 7;   // 作业或竞赛编号
+    int32 courseID = 8;    // 课程编号
+    int32 languageID = 9;  // 语言编号
+    string reporter = 10;  // 上报来源
+    string payload = 11;   // 事件业务字段
+}
+
+message QuerySolutionSubmittedEventsRsp {
+    string message = 1; // 返回信息
+    int32 code = 2;     // 返回码
+    repeated SolutionSubmittedEvent events = 3; // 提交事件列表
+    int32 total = 4;    // 总数
+}

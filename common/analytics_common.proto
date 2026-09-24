@@ -1,0 +1,42 @@
+syntax = "proto3";
+option go_package = "github.com/csuJudge/reportProto/common";
+
+package oj.report;
+
+// ReportEvent 是所有上报事件的公共模型，payload 保存单个事件的业务字段。
+message ReportEvent {
+    string eventID     = 1; // 事件编号
+    string eventName   = 2; // 事件名
+    int32 eventVersion = 3; // 事件结构版本
+    string occurredAt  = 4; // 事件发生时间
+    string createdTime = 5; // 服务器接收时间
+    int32 createdBy    = 6; // 操作用户
+    string reporter    = 7; // 上报来源
+    string payload     = 8; // 事件业务字段，UTF-8 JSON
+}
+
+// EventReject 表示单个事件被拒绝。
+message EventReject {
+    string eventID   = 1; // 事件编号
+    string eventName = 2; // 事件名
+    string reason    = 3; // 拒绝原因
+}
+
+// EventPayloadFilter 用于通用事件的 payload 查询条件。
+message EventPayloadFilter {
+    string key             = 1; // payload 字段名
+    repeated string values = 2; // 字段值列表
+    bool exclude           = 3; // 是否排除匹配值
+}
+
+// EventRecord 是通用事件查询结果。
+message EventRecord {
+    string eventID     = 1; // 事件编号
+    string eventName   = 2; // 事件名
+    int32 eventVersion = 3; // 事件结构版本
+    string occurredAt  = 4; // 事件发生时间
+    string createdTime = 5; // 服务器接收时间
+    int32 createdBy    = 6; // 操作用户
+    string reporter    = 7; // 上报来源
+    string payload     = 8; // 事件业务字段，UTF-8 JSON
+}

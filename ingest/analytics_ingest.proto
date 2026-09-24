@@ -1,0 +1,22 @@
+syntax = "proto3";
+option go_package = "github.com/csuJudge/reportProto/ingest";
+
+package oj.report;
+
+import "common/analytics_common.proto";
+
+service ReportIngestServer {
+    // SubmitEvents 批量上报事件
+    rpc SubmitEvents(SubmitEventsReq) returns (SubmitEventsRsp) {}
+}
+
+message SubmitEventsReq {
+    repeated ReportEvent events = 1; // 上报事件列表
+}
+
+message SubmitEventsRsp {
+    string message = 1;  // 返回信息
+    int32 code = 2;      // 返回码
+    int32 acceptedCount = 3; // 接收成功的事件数
+    repeated EventReject rejected = 4; // 拒绝的事件列表
+}
