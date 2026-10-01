@@ -12,6 +12,16 @@ service ReportQueryServer {
     rpc QueryProblemEnterEvents(QueryProblemEnterEventsReq) returns (QueryProblemEnterEventsRsp) {}
     // QuerySolutionSubmittedEvents 查询提交事件
     rpc QuerySolutionSubmittedEvents(QuerySolutionSubmittedEventsReq) returns (QuerySolutionSubmittedEventsRsp) {}
+    // QuerySolutionResultUpdatedEvents 查询判题结果事件
+    rpc QuerySolutionResultUpdatedEvents(QuerySolutionResultUpdatedEventsReq) returns (QuerySolutionResultUpdatedEventsRsp) {}
+    // QueryRecommendationMetrics 查询推荐效果指标
+    rpc QueryRecommendationMetrics(QueryRecommendationMetricsReq) returns (QueryRecommendationMetricsRsp) {}
+    // QueryProblemEnterSourceDistribution 查询题目进入来源分布
+    rpc QueryProblemEnterSourceDistribution(QueryProblemEnterSourceDistributionReq) returns (QueryProblemEnterSourceDistributionRsp) {}
+    // QueryUserBehaviorTrace 查询用户行为轨迹
+    rpc QueryUserBehaviorTrace(QueryUserBehaviorTraceReq) returns (QueryUserBehaviorTraceRsp) {}
+    // QueryAttemptSeqDistribution 查询提交次数分布
+    rpc QueryAttemptSeqDistribution(QueryAttemptSeqDistributionReq) returns (QueryAttemptSeqDistributionRsp) {}
 }
 
 message QueryEventsReq {
@@ -97,4 +107,120 @@ message QuerySolutionSubmittedEventsRsp {
     int32 code = 2;     // 返回码
     repeated SolutionSubmittedEvent events = 3; // 提交事件列表
     int32 total = 4;    // 总数
+}
+
+message QuerySolutionResultUpdatedEventsReq {
+    string startTime = 1; // 开始时间
+    string endTime = 2;   // 结束时间
+    repeated int32 createdBy = 3; // 用户编号
+    repeated int32 problemID = 4; // 题目编号
+    repeated int32 solutionID = 5; // 提交编号
+    repeated int32 contestID = 6; // 作业或竞赛编号
+    repeated string result = 7; // 判题结果过滤，如 AC/WA/TLE
+    int32 offset = 8; // 偏移量
+    int32 limit = 9;  // 每页数量
+}
+
+message SolutionResultUpdatedEvent {
+    string eventID = 1;     // 事件编号
+    string occurredAt = 2;  // 结果更新时间
+    int32 createdBy = 3;    // 用户编号
+    int32 problemID = 4;    // 题目编号
+    int32 solutionID = 5;   // 提交编号
+    string result = 6;      // 判题结果
+    int64 timeCostMs = 7;   // 运行时间（毫秒），缺失为 0
+    int64 memoryCostKb = 8; // 内存占用（KB），缺失为 0
+    string reporter = 9;    // 上报来源
+    string payload = 10;    // 事件业务字段
+}
+
+message QuerySolutionResultUpdatedEventsRsp {
+    string message = 1; // 返回信息
+    int32 code = 2;     // 返回码
+    repeated SolutionResultUpdatedEvent events = 3; // 判题结果事件列表
+    int32 total = 4;    // 总数
+}
+
+message QueryRecommendationMetricsReq {
+    string startTime = 1; // 开始时间
+    string endTime = 2;   // 结束时间
+    repeated string recommendationID = 3; // 推荐批次编号
+}
+
+message RecommendationMetrics {
+    int64 exposedUsers = 1;  // 推荐曝光用户数
+    int64 clickedUsers = 2;  // 推荐点击用户数
+    int64 exposedProblems = 3; // 推荐曝光题目数
+    int64 clickedProblems = 4; // 推荐点击题目数
+    double clickRate = 5;  // 推荐点击率（点击用户数/曝光用户数，0-1）
+}
+
+message QueryRecommendationMetricsRsp {
+    string message = 1; // 返回信息
+    int32 code = 2;     // 返回码
+    RecommendationMetrics metrics = 3; // 推荐效果指标
+}
+
+message QueryProblemEnterSourceDistributionReq {
+    string startTime = 1; // 开始时间
+    string endTime = 2;   // 结束时间
+    repeated int32 createdBy = 3; // 用户编号
+    repeated int32 problemID = 4; // 题目编号
+}
+
+message ProblemEnterSourceStat {
+    string entrySource = 1; // 进入来源
+    int64 enterCount = 2;   // 题目进入次数
+    int64 userCount = 3;    // 独立用户数
+}
+
+message QueryProblemEnterSourceDistributionRsp {
+    string message = 1; // 返回信息
+    int32 code = 2;     // 返回码
+    repeated ProblemEnterSourceStat distributions = 3; // 按来源分布
+    int64 totalEnterCount = 4; // 进入总次数
+}
+
+message QueryUserBehaviorTraceReq {
+    string startTime = 1; // 开始时间
+    string endTime = 2;   // 结束时间
+    int32 createdBy = 3;  // 用户编号
+    int32 problemID = 4;  // 题目编号，0 表示不过滤
+    int32 limit = 5;      // 轨迹事件最大条数
+}
+
+message BehaviorTraceEvent {
+    string eventName = 1; // 事件名
+    string eventID = 2;   // 事件编号
+    string occurredAt = 3; // 事件时间
+    int32 problemID = 4;  // 关联题目编号，无关联为 0
+    string payload = 5;   // 事件业务字段
+}
+
+message QueryUserBehaviorTraceRsp {
+    string message = 1; // 返回信息
+    int32 code = 2;     // 返回码
+    repeated BehaviorTraceEvent events = 3; // 按时间正序的行为事件
+    int32 total = 4;    // 总数
+}
+
+message QueryAttemptSeqDistributionReq {
+    string startTime = 1; // 开始时间
+    string endTime = 2;   // 结束时间
+    repeated int32 createdBy = 3; // 用户编号
+    repeated int32 problemID = 4; // 题目编号
+    repeated int32 contestID = 5; // 作业或竞赛编号
+}
+
+message AttemptSeqStat {
+    int32 attemptSeq = 1; // 提交次数序号
+    int64 submitCount = 2; // 该次提交的提交数
+    map<string, int32> resultCounts = 3; // 判题结果分布，result -> 次数
+}
+
+message QueryAttemptSeqDistributionRsp {
+    string message = 1; // 返回信息
+    int32 code = 2;     // 返回码
+    repeated AttemptSeqStat distributions = 3; // 按提交次数分布
+    int64 totalSubmitCount = 4; // 提交总数
 }
