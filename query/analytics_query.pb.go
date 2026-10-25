@@ -1907,6 +1907,384 @@ func (x *QueryAttemptSeqDistributionRsp) GetTotalSubmitCount() int64 {
 	return 0
 }
 
+type AnalyticsQueryReq struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	QueryName     string                 `protobuf:"bytes,1,opt,name=queryName,proto3" json:"queryName,omitempty"`                                                                     // 预注册查询名
+	Params        map[string]string      `protobuf:"bytes,2,rep,name=params,proto3" json:"params,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"` // 查询参数，全部字符串，引擎按定义声明的类型转换校验
+	Offset        int32                  `protobuf:"varint,3,opt,name=offset,proto3" json:"offset,omitempty"`                                                                          // 分页偏移（聚合类查询无效）
+	Limit         int32                  `protobuf:"varint,4,opt,name=limit,proto3" json:"limit,omitempty"`                                                                            // 每页数量（聚合类查询无效）
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *AnalyticsQueryReq) Reset() {
+	*x = AnalyticsQueryReq{}
+	mi := &file_query_analytics_query_proto_msgTypes[23]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *AnalyticsQueryReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*AnalyticsQueryReq) ProtoMessage() {}
+
+func (x *AnalyticsQueryReq) ProtoReflect() protoreflect.Message {
+	mi := &file_query_analytics_query_proto_msgTypes[23]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use AnalyticsQueryReq.ProtoReflect.Descriptor instead.
+func (*AnalyticsQueryReq) Descriptor() ([]byte, []int) {
+	return file_query_analytics_query_proto_rawDescGZIP(), []int{23}
+}
+
+func (x *AnalyticsQueryReq) GetQueryName() string {
+	if x != nil {
+		return x.QueryName
+	}
+	return ""
+}
+
+func (x *AnalyticsQueryReq) GetParams() map[string]string {
+	if x != nil {
+		return x.Params
+	}
+	return nil
+}
+
+func (x *AnalyticsQueryReq) GetOffset() int32 {
+	if x != nil {
+		return x.Offset
+	}
+	return 0
+}
+
+func (x *AnalyticsQueryReq) GetLimit() int32 {
+	if x != nil {
+		return x.Limit
+	}
+	return 0
+}
+
+type AnalyticsColumnMeta struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Name          string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`   // 列名（camelCase，前后端契约）
+	Type          string                 `protobuf:"bytes,2,opt,name=type,proto3" json:"type,omitempty"`   // string|int64|double|bool|datetime|json
+	Label         string                 `protobuf:"bytes,3,opt,name=label,proto3" json:"label,omitempty"` // 中文列名（前端表头展示）
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *AnalyticsColumnMeta) Reset() {
+	*x = AnalyticsColumnMeta{}
+	mi := &file_query_analytics_query_proto_msgTypes[24]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *AnalyticsColumnMeta) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*AnalyticsColumnMeta) ProtoMessage() {}
+
+func (x *AnalyticsColumnMeta) ProtoReflect() protoreflect.Message {
+	mi := &file_query_analytics_query_proto_msgTypes[24]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use AnalyticsColumnMeta.ProtoReflect.Descriptor instead.
+func (*AnalyticsColumnMeta) Descriptor() ([]byte, []int) {
+	return file_query_analytics_query_proto_rawDescGZIP(), []int{24}
+}
+
+func (x *AnalyticsColumnMeta) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+func (x *AnalyticsColumnMeta) GetType() string {
+	if x != nil {
+		return x.Type
+	}
+	return ""
+}
+
+func (x *AnalyticsColumnMeta) GetLabel() string {
+	if x != nil {
+		return x.Label
+	}
+	return ""
+}
+
+type AnalyticsValue struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// Types that are valid to be assigned to Value:
+	//
+	//	*AnalyticsValue_StringVal
+	//	*AnalyticsValue_IntVal
+	//	*AnalyticsValue_DoubleVal
+	//	*AnalyticsValue_BoolVal
+	//	*AnalyticsValue_JsonVal
+	Value         isAnalyticsValue_Value `protobuf_oneof:"value"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *AnalyticsValue) Reset() {
+	*x = AnalyticsValue{}
+	mi := &file_query_analytics_query_proto_msgTypes[25]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *AnalyticsValue) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*AnalyticsValue) ProtoMessage() {}
+
+func (x *AnalyticsValue) ProtoReflect() protoreflect.Message {
+	mi := &file_query_analytics_query_proto_msgTypes[25]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use AnalyticsValue.ProtoReflect.Descriptor instead.
+func (*AnalyticsValue) Descriptor() ([]byte, []int) {
+	return file_query_analytics_query_proto_rawDescGZIP(), []int{25}
+}
+
+func (x *AnalyticsValue) GetValue() isAnalyticsValue_Value {
+	if x != nil {
+		return x.Value
+	}
+	return nil
+}
+
+func (x *AnalyticsValue) GetStringVal() string {
+	if x != nil {
+		if x, ok := x.Value.(*AnalyticsValue_StringVal); ok {
+			return x.StringVal
+		}
+	}
+	return ""
+}
+
+func (x *AnalyticsValue) GetIntVal() int64 {
+	if x != nil {
+		if x, ok := x.Value.(*AnalyticsValue_IntVal); ok {
+			return x.IntVal
+		}
+	}
+	return 0
+}
+
+func (x *AnalyticsValue) GetDoubleVal() float64 {
+	if x != nil {
+		if x, ok := x.Value.(*AnalyticsValue_DoubleVal); ok {
+			return x.DoubleVal
+		}
+	}
+	return 0
+}
+
+func (x *AnalyticsValue) GetBoolVal() bool {
+	if x != nil {
+		if x, ok := x.Value.(*AnalyticsValue_BoolVal); ok {
+			return x.BoolVal
+		}
+	}
+	return false
+}
+
+func (x *AnalyticsValue) GetJsonVal() string {
+	if x != nil {
+		if x, ok := x.Value.(*AnalyticsValue_JsonVal); ok {
+			return x.JsonVal
+		}
+	}
+	return ""
+}
+
+type isAnalyticsValue_Value interface {
+	isAnalyticsValue_Value()
+}
+
+type AnalyticsValue_StringVal struct {
+	StringVal string `protobuf:"bytes,1,opt,name=stringVal,proto3,oneof"`
+}
+
+type AnalyticsValue_IntVal struct {
+	IntVal int64 `protobuf:"varint,2,opt,name=intVal,proto3,oneof"`
+}
+
+type AnalyticsValue_DoubleVal struct {
+	DoubleVal float64 `protobuf:"fixed64,3,opt,name=doubleVal,proto3,oneof"`
+}
+
+type AnalyticsValue_BoolVal struct {
+	BoolVal bool `protobuf:"varint,4,opt,name=boolVal,proto3,oneof"`
+}
+
+type AnalyticsValue_JsonVal struct {
+	JsonVal string `protobuf:"bytes,5,opt,name=jsonVal,proto3,oneof"` // JSON 字符串：嵌套结构（resultCounts map、payload 等）
+}
+
+func (*AnalyticsValue_StringVal) isAnalyticsValue_Value() {}
+
+func (*AnalyticsValue_IntVal) isAnalyticsValue_Value() {}
+
+func (*AnalyticsValue_DoubleVal) isAnalyticsValue_Value() {}
+
+func (*AnalyticsValue_BoolVal) isAnalyticsValue_Value() {}
+
+func (*AnalyticsValue_JsonVal) isAnalyticsValue_Value() {}
+
+type AnalyticsRow struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Values        []*AnalyticsValue      `protobuf:"bytes,1,rep,name=values,proto3" json:"values,omitempty"` // 与 columns 顺序一一对应
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *AnalyticsRow) Reset() {
+	*x = AnalyticsRow{}
+	mi := &file_query_analytics_query_proto_msgTypes[26]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *AnalyticsRow) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*AnalyticsRow) ProtoMessage() {}
+
+func (x *AnalyticsRow) ProtoReflect() protoreflect.Message {
+	mi := &file_query_analytics_query_proto_msgTypes[26]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use AnalyticsRow.ProtoReflect.Descriptor instead.
+func (*AnalyticsRow) Descriptor() ([]byte, []int) {
+	return file_query_analytics_query_proto_rawDescGZIP(), []int{26}
+}
+
+func (x *AnalyticsRow) GetValues() []*AnalyticsValue {
+	if x != nil {
+		return x.Values
+	}
+	return nil
+}
+
+type AnalyticsQueryRsp struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Message       string                 `protobuf:"bytes,1,opt,name=message,proto3" json:"message,omitempty"`
+	Code          int32                  `protobuf:"varint,2,opt,name=code,proto3" json:"code,omitempty"` // 复用现有错误码体系，新增「查询不存在」码
+	Columns       []*AnalyticsColumnMeta `protobuf:"bytes,3,rep,name=columns,proto3" json:"columns,omitempty"`
+	Rows          []*AnalyticsRow        `protobuf:"bytes,4,rep,name=rows,proto3" json:"rows,omitempty"`
+	Total         int64                  `protobuf:"varint,5,opt,name=total,proto3" json:"total,omitempty"` // 明细类总行数（分页用）；聚合类恒为 0
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *AnalyticsQueryRsp) Reset() {
+	*x = AnalyticsQueryRsp{}
+	mi := &file_query_analytics_query_proto_msgTypes[27]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *AnalyticsQueryRsp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*AnalyticsQueryRsp) ProtoMessage() {}
+
+func (x *AnalyticsQueryRsp) ProtoReflect() protoreflect.Message {
+	mi := &file_query_analytics_query_proto_msgTypes[27]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use AnalyticsQueryRsp.ProtoReflect.Descriptor instead.
+func (*AnalyticsQueryRsp) Descriptor() ([]byte, []int) {
+	return file_query_analytics_query_proto_rawDescGZIP(), []int{27}
+}
+
+func (x *AnalyticsQueryRsp) GetMessage() string {
+	if x != nil {
+		return x.Message
+	}
+	return ""
+}
+
+func (x *AnalyticsQueryRsp) GetCode() int32 {
+	if x != nil {
+		return x.Code
+	}
+	return 0
+}
+
+func (x *AnalyticsQueryRsp) GetColumns() []*AnalyticsColumnMeta {
+	if x != nil {
+		return x.Columns
+	}
+	return nil
+}
+
+func (x *AnalyticsQueryRsp) GetRows() []*AnalyticsRow {
+	if x != nil {
+		return x.Rows
+	}
+	return nil
+}
+
+func (x *AnalyticsQueryRsp) GetTotal() int64 {
+	if x != nil {
+		return x.Total
+	}
+	return 0
+}
+
 var File_query_analytics_query_proto protoreflect.FileDescriptor
 
 const file_query_analytics_query_proto_rawDesc = "" +
@@ -2100,7 +2478,34 @@ const file_query_analytics_query_proto_rawDesc = "" +
 	"\amessage\x18\x01 \x01(\tR\amessage\x12\x12\n" +
 	"\x04code\x18\x02 \x01(\x05R\x04code\x12?\n" +
 	"\rdistributions\x18\x03 \x03(\v2\x19.oj.report.AttemptSeqStatR\rdistributions\x12*\n" +
-	"\x10totalSubmitCount\x18\x04 \x01(\x03R\x10totalSubmitCount2\xa9\a\n" +
+	"\x10totalSubmitCount\x18\x04 \x01(\x03R\x10totalSubmitCount\"\xdc\x01\n" +
+	"\x11AnalyticsQueryReq\x12\x1c\n" +
+	"\tqueryName\x18\x01 \x01(\tR\tqueryName\x12@\n" +
+	"\x06params\x18\x02 \x03(\v2(.oj.report.AnalyticsQueryReq.ParamsEntryR\x06params\x12\x16\n" +
+	"\x06offset\x18\x03 \x01(\x05R\x06offset\x12\x14\n" +
+	"\x05limit\x18\x04 \x01(\x05R\x05limit\x1a9\n" +
+	"\vParamsEntry\x12\x10\n" +
+	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
+	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"S\n" +
+	"\x13AnalyticsColumnMeta\x12\x12\n" +
+	"\x04name\x18\x01 \x01(\tR\x04name\x12\x12\n" +
+	"\x04type\x18\x02 \x01(\tR\x04type\x12\x14\n" +
+	"\x05label\x18\x03 \x01(\tR\x05label\"\xab\x01\n" +
+	"\x0eAnalyticsValue\x12\x1e\n" +
+	"\tstringVal\x18\x01 \x01(\tH\x00R\tstringVal\x12\x18\n" +
+	"\x06intVal\x18\x02 \x01(\x03H\x00R\x06intVal\x12\x1e\n" +
+	"\tdoubleVal\x18\x03 \x01(\x01H\x00R\tdoubleVal\x12\x1a\n" +
+	"\aboolVal\x18\x04 \x01(\bH\x00R\aboolVal\x12\x1a\n" +
+	"\ajsonVal\x18\x05 \x01(\tH\x00R\ajsonValB\a\n" +
+	"\x05value\"A\n" +
+	"\fAnalyticsRow\x121\n" +
+	"\x06values\x18\x01 \x03(\v2\x19.oj.report.AnalyticsValueR\x06values\"\xbe\x01\n" +
+	"\x11AnalyticsQueryRsp\x12\x18\n" +
+	"\amessage\x18\x01 \x01(\tR\amessage\x12\x12\n" +
+	"\x04code\x18\x02 \x01(\x05R\x04code\x128\n" +
+	"\acolumns\x18\x03 \x03(\v2\x1e.oj.report.AnalyticsColumnMetaR\acolumns\x12+\n" +
+	"\x04rows\x18\x04 \x03(\v2\x17.oj.report.AnalyticsRowR\x04rows\x12\x14\n" +
+	"\x05total\x18\x05 \x01(\x03R\x05total2\xf9\a\n" +
 	"\x11ReportQueryServer\x12E\n" +
 	"\vQueryEvents\x12\x19.oj.report.QueryEventsReq\x1a\x19.oj.report.QueryEventsRsp\"\x00\x12i\n" +
 	"\x17QueryProblemEnterEvents\x12%.oj.report.QueryProblemEnterEventsReq\x1a%.oj.report.QueryProblemEnterEventsRsp\"\x00\x12x\n" +
@@ -2109,7 +2514,8 @@ const file_query_analytics_query_proto_rawDesc = "" +
 	"\x1aQueryRecommendationMetrics\x12(.oj.report.QueryRecommendationMetricsReq\x1a(.oj.report.QueryRecommendationMetricsRsp\"\x00\x12\x8d\x01\n" +
 	"#QueryProblemEnterSourceDistribution\x121.oj.report.QueryProblemEnterSourceDistributionReq\x1a1.oj.report.QueryProblemEnterSourceDistributionRsp\"\x00\x12f\n" +
 	"\x16QueryUserBehaviorTrace\x12$.oj.report.QueryUserBehaviorTraceReq\x1a$.oj.report.QueryUserBehaviorTraceRsp\"\x00\x12u\n" +
-	"\x1bQueryAttemptSeqDistribution\x12).oj.report.QueryAttemptSeqDistributionReq\x1a).oj.report.QueryAttemptSeqDistributionRsp\"\x00B'Z%github.com/csuJudge/reportProto/queryb\x06proto3"
+	"\x1bQueryAttemptSeqDistribution\x12).oj.report.QueryAttemptSeqDistributionReq\x1a).oj.report.QueryAttemptSeqDistributionRsp\"\x00\x12N\n" +
+	"\x0eQueryAnalytics\x12\x1c.oj.report.AnalyticsQueryReq\x1a\x1c.oj.report.AnalyticsQueryRsp\"\x00B'Z%github.com/csuJudge/reportProto/queryb\x06proto3"
 
 var (
 	file_query_analytics_query_proto_rawDescOnce sync.Once
@@ -2123,7 +2529,7 @@ func file_query_analytics_query_proto_rawDescGZIP() []byte {
 	return file_query_analytics_query_proto_rawDescData
 }
 
-var file_query_analytics_query_proto_msgTypes = make([]protoimpl.MessageInfo, 24)
+var file_query_analytics_query_proto_msgTypes = make([]protoimpl.MessageInfo, 30)
 var file_query_analytics_query_proto_goTypes = []any{
 	(*QueryEventsReq)(nil),                         // 0: oj.report.QueryEventsReq
 	(*QueryEventsRsp)(nil),                         // 1: oj.report.QueryEventsRsp
@@ -2148,42 +2554,54 @@ var file_query_analytics_query_proto_goTypes = []any{
 	(*QueryAttemptSeqDistributionReq)(nil),         // 20: oj.report.QueryAttemptSeqDistributionReq
 	(*AttemptSeqStat)(nil),                         // 21: oj.report.AttemptSeqStat
 	(*QueryAttemptSeqDistributionRsp)(nil),         // 22: oj.report.QueryAttemptSeqDistributionRsp
-	nil,                                            // 23: oj.report.AttemptSeqStat.ResultCountsEntry
-	(*common.EventPayloadFilter)(nil),              // 24: oj.report.EventPayloadFilter
-	(*common.EventRecord)(nil),                     // 25: oj.report.EventRecord
+	(*AnalyticsQueryReq)(nil),                      // 23: oj.report.AnalyticsQueryReq
+	(*AnalyticsColumnMeta)(nil),                    // 24: oj.report.AnalyticsColumnMeta
+	(*AnalyticsValue)(nil),                         // 25: oj.report.AnalyticsValue
+	(*AnalyticsRow)(nil),                           // 26: oj.report.AnalyticsRow
+	(*AnalyticsQueryRsp)(nil),                      // 27: oj.report.AnalyticsQueryRsp
+	nil,                                            // 28: oj.report.AttemptSeqStat.ResultCountsEntry
+	nil,                                            // 29: oj.report.AnalyticsQueryReq.ParamsEntry
+	(*common.EventPayloadFilter)(nil),              // 30: oj.report.EventPayloadFilter
+	(*common.EventRecord)(nil),                     // 31: oj.report.EventRecord
 }
 var file_query_analytics_query_proto_depIdxs = []int32{
-	24, // 0: oj.report.QueryEventsReq.payloadFilters:type_name -> oj.report.EventPayloadFilter
-	25, // 1: oj.report.QueryEventsRsp.events:type_name -> oj.report.EventRecord
+	30, // 0: oj.report.QueryEventsReq.payloadFilters:type_name -> oj.report.EventPayloadFilter
+	31, // 1: oj.report.QueryEventsRsp.events:type_name -> oj.report.EventRecord
 	3,  // 2: oj.report.QueryProblemEnterEventsRsp.events:type_name -> oj.report.ProblemEnterEvent
 	6,  // 3: oj.report.QuerySolutionSubmittedEventsRsp.events:type_name -> oj.report.SolutionSubmittedEvent
 	9,  // 4: oj.report.QuerySolutionResultUpdatedEventsRsp.events:type_name -> oj.report.SolutionResultUpdatedEvent
 	12, // 5: oj.report.QueryRecommendationMetricsRsp.metrics:type_name -> oj.report.RecommendationMetrics
 	15, // 6: oj.report.QueryProblemEnterSourceDistributionRsp.distributions:type_name -> oj.report.ProblemEnterSourceStat
 	18, // 7: oj.report.QueryUserBehaviorTraceRsp.events:type_name -> oj.report.BehaviorTraceEvent
-	23, // 8: oj.report.AttemptSeqStat.resultCounts:type_name -> oj.report.AttemptSeqStat.ResultCountsEntry
+	28, // 8: oj.report.AttemptSeqStat.resultCounts:type_name -> oj.report.AttemptSeqStat.ResultCountsEntry
 	21, // 9: oj.report.QueryAttemptSeqDistributionRsp.distributions:type_name -> oj.report.AttemptSeqStat
-	0,  // 10: oj.report.ReportQueryServer.QueryEvents:input_type -> oj.report.QueryEventsReq
-	2,  // 11: oj.report.ReportQueryServer.QueryProblemEnterEvents:input_type -> oj.report.QueryProblemEnterEventsReq
-	5,  // 12: oj.report.ReportQueryServer.QuerySolutionSubmittedEvents:input_type -> oj.report.QuerySolutionSubmittedEventsReq
-	8,  // 13: oj.report.ReportQueryServer.QuerySolutionResultUpdatedEvents:input_type -> oj.report.QuerySolutionResultUpdatedEventsReq
-	11, // 14: oj.report.ReportQueryServer.QueryRecommendationMetrics:input_type -> oj.report.QueryRecommendationMetricsReq
-	14, // 15: oj.report.ReportQueryServer.QueryProblemEnterSourceDistribution:input_type -> oj.report.QueryProblemEnterSourceDistributionReq
-	17, // 16: oj.report.ReportQueryServer.QueryUserBehaviorTrace:input_type -> oj.report.QueryUserBehaviorTraceReq
-	20, // 17: oj.report.ReportQueryServer.QueryAttemptSeqDistribution:input_type -> oj.report.QueryAttemptSeqDistributionReq
-	1,  // 18: oj.report.ReportQueryServer.QueryEvents:output_type -> oj.report.QueryEventsRsp
-	4,  // 19: oj.report.ReportQueryServer.QueryProblemEnterEvents:output_type -> oj.report.QueryProblemEnterEventsRsp
-	7,  // 20: oj.report.ReportQueryServer.QuerySolutionSubmittedEvents:output_type -> oj.report.QuerySolutionSubmittedEventsRsp
-	10, // 21: oj.report.ReportQueryServer.QuerySolutionResultUpdatedEvents:output_type -> oj.report.QuerySolutionResultUpdatedEventsRsp
-	13, // 22: oj.report.ReportQueryServer.QueryRecommendationMetrics:output_type -> oj.report.QueryRecommendationMetricsRsp
-	16, // 23: oj.report.ReportQueryServer.QueryProblemEnterSourceDistribution:output_type -> oj.report.QueryProblemEnterSourceDistributionRsp
-	19, // 24: oj.report.ReportQueryServer.QueryUserBehaviorTrace:output_type -> oj.report.QueryUserBehaviorTraceRsp
-	22, // 25: oj.report.ReportQueryServer.QueryAttemptSeqDistribution:output_type -> oj.report.QueryAttemptSeqDistributionRsp
-	18, // [18:26] is the sub-list for method output_type
-	10, // [10:18] is the sub-list for method input_type
-	10, // [10:10] is the sub-list for extension type_name
-	10, // [10:10] is the sub-list for extension extendee
-	0,  // [0:10] is the sub-list for field type_name
+	29, // 10: oj.report.AnalyticsQueryReq.params:type_name -> oj.report.AnalyticsQueryReq.ParamsEntry
+	25, // 11: oj.report.AnalyticsRow.values:type_name -> oj.report.AnalyticsValue
+	24, // 12: oj.report.AnalyticsQueryRsp.columns:type_name -> oj.report.AnalyticsColumnMeta
+	26, // 13: oj.report.AnalyticsQueryRsp.rows:type_name -> oj.report.AnalyticsRow
+	0,  // 14: oj.report.ReportQueryServer.QueryEvents:input_type -> oj.report.QueryEventsReq
+	2,  // 15: oj.report.ReportQueryServer.QueryProblemEnterEvents:input_type -> oj.report.QueryProblemEnterEventsReq
+	5,  // 16: oj.report.ReportQueryServer.QuerySolutionSubmittedEvents:input_type -> oj.report.QuerySolutionSubmittedEventsReq
+	8,  // 17: oj.report.ReportQueryServer.QuerySolutionResultUpdatedEvents:input_type -> oj.report.QuerySolutionResultUpdatedEventsReq
+	11, // 18: oj.report.ReportQueryServer.QueryRecommendationMetrics:input_type -> oj.report.QueryRecommendationMetricsReq
+	14, // 19: oj.report.ReportQueryServer.QueryProblemEnterSourceDistribution:input_type -> oj.report.QueryProblemEnterSourceDistributionReq
+	17, // 20: oj.report.ReportQueryServer.QueryUserBehaviorTrace:input_type -> oj.report.QueryUserBehaviorTraceReq
+	20, // 21: oj.report.ReportQueryServer.QueryAttemptSeqDistribution:input_type -> oj.report.QueryAttemptSeqDistributionReq
+	23, // 22: oj.report.ReportQueryServer.QueryAnalytics:input_type -> oj.report.AnalyticsQueryReq
+	1,  // 23: oj.report.ReportQueryServer.QueryEvents:output_type -> oj.report.QueryEventsRsp
+	4,  // 24: oj.report.ReportQueryServer.QueryProblemEnterEvents:output_type -> oj.report.QueryProblemEnterEventsRsp
+	7,  // 25: oj.report.ReportQueryServer.QuerySolutionSubmittedEvents:output_type -> oj.report.QuerySolutionSubmittedEventsRsp
+	10, // 26: oj.report.ReportQueryServer.QuerySolutionResultUpdatedEvents:output_type -> oj.report.QuerySolutionResultUpdatedEventsRsp
+	13, // 27: oj.report.ReportQueryServer.QueryRecommendationMetrics:output_type -> oj.report.QueryRecommendationMetricsRsp
+	16, // 28: oj.report.ReportQueryServer.QueryProblemEnterSourceDistribution:output_type -> oj.report.QueryProblemEnterSourceDistributionRsp
+	19, // 29: oj.report.ReportQueryServer.QueryUserBehaviorTrace:output_type -> oj.report.QueryUserBehaviorTraceRsp
+	22, // 30: oj.report.ReportQueryServer.QueryAttemptSeqDistribution:output_type -> oj.report.QueryAttemptSeqDistributionRsp
+	27, // 31: oj.report.ReportQueryServer.QueryAnalytics:output_type -> oj.report.AnalyticsQueryRsp
+	23, // [23:32] is the sub-list for method output_type
+	14, // [14:23] is the sub-list for method input_type
+	14, // [14:14] is the sub-list for extension type_name
+	14, // [14:14] is the sub-list for extension extendee
+	0,  // [0:14] is the sub-list for field type_name
 }
 
 func init() { file_query_analytics_query_proto_init() }
@@ -2191,13 +2609,20 @@ func file_query_analytics_query_proto_init() {
 	if File_query_analytics_query_proto != nil {
 		return
 	}
+	file_query_analytics_query_proto_msgTypes[25].OneofWrappers = []any{
+		(*AnalyticsValue_StringVal)(nil),
+		(*AnalyticsValue_IntVal)(nil),
+		(*AnalyticsValue_DoubleVal)(nil),
+		(*AnalyticsValue_BoolVal)(nil),
+		(*AnalyticsValue_JsonVal)(nil),
+	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_query_analytics_query_proto_rawDesc), len(file_query_analytics_query_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   24,
+			NumMessages:   30,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

@@ -35,6 +35,8 @@ type ReportQueryServerService interface {
 	QueryUserBehaviorTrace(ctx context.Context, req *QueryUserBehaviorTraceReq) (*QueryUserBehaviorTraceRsp, error)
 	// QueryAttemptSeqDistribution QueryAttemptSeqDistribution 查询提交次数分布
 	QueryAttemptSeqDistribution(ctx context.Context, req *QueryAttemptSeqDistributionReq) (*QueryAttemptSeqDistributionRsp, error)
+	// QueryAnalytics 通用查询：query_name 为查询定义文件中预注册的查询名
+	QueryAnalytics(ctx context.Context, req *AnalyticsQueryReq) (*AnalyticsQueryRsp, error)
 }
 
 func ReportQueryServerService_QueryEvents_Handler(svr interface{}, ctx context.Context, f server.FilterFunc) (interface{}, error) {
@@ -181,6 +183,24 @@ func ReportQueryServerService_QueryAttemptSeqDistribution_Handler(svr interface{
 	return rsp, nil
 }
 
+func ReportQueryServerService_QueryAnalytics_Handler(svr interface{}, ctx context.Context, f server.FilterFunc) (interface{}, error) {
+	req := &AnalyticsQueryReq{}
+	filters, err := f(req)
+	if err != nil {
+		return nil, err
+	}
+	handleFunc := func(ctx context.Context, reqbody interface{}) (interface{}, error) {
+		return svr.(ReportQueryServerService).QueryAnalytics(ctx, reqbody.(*AnalyticsQueryReq))
+	}
+
+	var rsp interface{}
+	rsp, err = filters.Filter(ctx, req, handleFunc)
+	if err != nil {
+		return nil, err
+	}
+	return rsp, nil
+}
+
 // ReportQueryServerServer_ServiceDesc descriptor for server.RegisterService.
 var ReportQueryServerServer_ServiceDesc = server.ServiceDesc{
 	ServiceName: "oj.report.ReportQueryServer",
@@ -217,6 +237,10 @@ var ReportQueryServerServer_ServiceDesc = server.ServiceDesc{
 		{
 			Name: "/oj.report.ReportQueryServer/QueryAttemptSeqDistribution",
 			Func: ReportQueryServerService_QueryAttemptSeqDistribution_Handler,
+		},
+		{
+			Name: "/oj.report.ReportQueryServer/QueryAnalytics",
+			Func: ReportQueryServerService_QueryAnalytics_Handler,
 		},
 	},
 }
@@ -272,6 +296,11 @@ func (s *UnimplementedReportQueryServer) QueryAttemptSeqDistribution(ctx context
 	return nil, errors.New("rpc QueryAttemptSeqDistribution of service ReportQueryServer is not implemented")
 }
 
+// QueryAnalytics 通用查询：query_name 为查询定义文件中预注册的查询名
+func (s *UnimplementedReportQueryServer) QueryAnalytics(ctx context.Context, req *AnalyticsQueryReq) (*AnalyticsQueryRsp, error) {
+	return nil, errors.New("rpc QueryAnalytics of service ReportQueryServer is not implemented")
+}
+
 // END --------------------------------- Default Unimplemented Server Service --------------------------------- END
 
 // END ======================================= Server Service Definition ======================================= END
@@ -296,6 +325,8 @@ type ReportQueryServerClientProxy interface {
 	QueryUserBehaviorTrace(ctx context.Context, req *QueryUserBehaviorTraceReq, opts ...client.Option) (rsp *QueryUserBehaviorTraceRsp, err error)
 	// QueryAttemptSeqDistribution QueryAttemptSeqDistribution 查询提交次数分布
 	QueryAttemptSeqDistribution(ctx context.Context, req *QueryAttemptSeqDistributionReq, opts ...client.Option) (rsp *QueryAttemptSeqDistributionRsp, err error)
+	// QueryAnalytics 通用查询：query_name 为查询定义文件中预注册的查询名
+	QueryAnalytics(ctx context.Context, req *AnalyticsQueryReq, opts ...client.Option) (rsp *AnalyticsQueryRsp, err error)
 }
 
 type ReportQueryServerClientProxyImpl struct {
@@ -461,6 +492,26 @@ func (c *ReportQueryServerClientProxyImpl) QueryAttemptSeqDistribution(ctx conte
 	callopts = append(callopts, c.opts...)
 	callopts = append(callopts, opts...)
 	rsp := &QueryAttemptSeqDistributionRsp{}
+	if err := c.client.Invoke(ctx, req, rsp, callopts...); err != nil {
+		return nil, err
+	}
+	return rsp, nil
+}
+
+func (c *ReportQueryServerClientProxyImpl) QueryAnalytics(ctx context.Context, req *AnalyticsQueryReq, opts ...client.Option) (*AnalyticsQueryRsp, error) {
+	ctx, msg := codec.WithCloneMessage(ctx)
+	defer codec.PutBackMessage(msg)
+	msg.WithClientRPCName("/oj.report.ReportQueryServer/QueryAnalytics")
+	msg.WithCalleeServiceName(ReportQueryServerServer_ServiceDesc.ServiceName)
+	msg.WithCalleeApp("")
+	msg.WithCalleeServer("")
+	msg.WithCalleeService("ReportQueryServer")
+	msg.WithCalleeMethod("QueryAnalytics")
+	msg.WithSerializationType(codec.SerializationTypePB)
+	callopts := make([]client.Option, 0, len(c.opts)+len(opts))
+	callopts = append(callopts, c.opts...)
+	callopts = append(callopts, opts...)
+	rsp := &AnalyticsQueryRsp{}
 	if err := c.client.Invoke(ctx, req, rsp, callopts...); err != nil {
 		return nil, err
 	}

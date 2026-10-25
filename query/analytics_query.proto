@@ -22,6 +22,8 @@ service ReportQueryServer {
     rpc QueryUserBehaviorTrace(QueryUserBehaviorTraceReq) returns (QueryUserBehaviorTraceRsp) {}
     // QueryAttemptSeqDistribution 查询提交次数分布
     rpc QueryAttemptSeqDistribution(QueryAttemptSeqDistributionReq) returns (QueryAttemptSeqDistributionRsp) {}
+    // 通用查询：query_name 为查询定义文件中预注册的查询名
+    rpc QueryAnalytics(AnalyticsQueryReq) returns (AnalyticsQueryRsp) {}
 }
 
 message QueryEventsReq {
@@ -224,3 +226,39 @@ message QueryAttemptSeqDistributionRsp {
     repeated AttemptSeqStat distributions = 3; // 按提交次数分布
     int64 totalSubmitCount = 4; // 提交总数
 }
+
+message AnalyticsQueryReq {
+    string queryName = 1;            // 预注册查询名
+    map<string, string> params = 2;  // 查询参数，全部字符串，引擎按定义声明的类型转换校验
+    int32 offset = 3;                // 分页偏移（聚合类查询无效）
+    int32 limit = 4;                 // 每页数量（聚合类查询无效）
+}
+
+message AnalyticsColumnMeta {
+    string name = 1;   // 列名（camelCase，前后端契约）
+    string type = 2;   // string|int64|double|bool|datetime|json
+    string label = 3;  // 中文列名（前端表头展示）
+}
+
+message AnalyticsValue {
+    oneof value {
+        string stringVal = 1;
+        int64 intVal = 2;
+        double doubleVal = 3;
+        bool boolVal = 4;
+        string jsonVal = 5;  // JSON 字符串：嵌套结构（resultCounts map、payload 等）
+    }
+}
+
+message AnalyticsRow {
+    repeated AnalyticsValue values = 1;  // 与 columns 顺序一一对应
+}
+
+message AnalyticsQueryRsp {
+    string message = 1;
+    int32 code = 2;                       // 复用现有错误码体系，新增「查询不存在」码
+    repeated AnalyticsColumnMeta columns = 3;
+    repeated AnalyticsRow rows = 4;
+    int64 total = 5;                      // 明细类总行数（分页用）；聚合类恒为 0
+}
+
