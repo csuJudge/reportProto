@@ -60,6 +60,97 @@ func RegisterReportIngestServerService(s server.Service, svr ReportIngestServerS
 	}
 }
 
+// ReportSchemaAdminServerService defines service.
+type ReportSchemaAdminServerService interface {
+	// ListEventSchemas ListEventSchemas 列出全部事件定义（含禁用事件）
+	ListEventSchemas(ctx context.Context, req *ListEventSchemasReq) (*ListEventSchemasRsp, error)
+	// UpsertEventSchema UpsertEventSchema 新增或更新事件定义，按 eventName + eventVersion 定位
+	UpsertEventSchema(ctx context.Context, req *UpsertEventSchemaReq) (*UpsertEventSchemaRsp, error)
+	// SetEventSchemaEnabled SetEventSchemaEnabled 启用或禁用事件定义
+	SetEventSchemaEnabled(ctx context.Context, req *SetEventSchemaEnabledReq) (*SetEventSchemaEnabledRsp, error)
+}
+
+func ReportSchemaAdminServerService_ListEventSchemas_Handler(svr interface{}, ctx context.Context, f server.FilterFunc) (interface{}, error) {
+	req := &ListEventSchemasReq{}
+	filters, err := f(req)
+	if err != nil {
+		return nil, err
+	}
+	handleFunc := func(ctx context.Context, reqbody interface{}) (interface{}, error) {
+		return svr.(ReportSchemaAdminServerService).ListEventSchemas(ctx, reqbody.(*ListEventSchemasReq))
+	}
+
+	var rsp interface{}
+	rsp, err = filters.Filter(ctx, req, handleFunc)
+	if err != nil {
+		return nil, err
+	}
+	return rsp, nil
+}
+
+func ReportSchemaAdminServerService_UpsertEventSchema_Handler(svr interface{}, ctx context.Context, f server.FilterFunc) (interface{}, error) {
+	req := &UpsertEventSchemaReq{}
+	filters, err := f(req)
+	if err != nil {
+		return nil, err
+	}
+	handleFunc := func(ctx context.Context, reqbody interface{}) (interface{}, error) {
+		return svr.(ReportSchemaAdminServerService).UpsertEventSchema(ctx, reqbody.(*UpsertEventSchemaReq))
+	}
+
+	var rsp interface{}
+	rsp, err = filters.Filter(ctx, req, handleFunc)
+	if err != nil {
+		return nil, err
+	}
+	return rsp, nil
+}
+
+func ReportSchemaAdminServerService_SetEventSchemaEnabled_Handler(svr interface{}, ctx context.Context, f server.FilterFunc) (interface{}, error) {
+	req := &SetEventSchemaEnabledReq{}
+	filters, err := f(req)
+	if err != nil {
+		return nil, err
+	}
+	handleFunc := func(ctx context.Context, reqbody interface{}) (interface{}, error) {
+		return svr.(ReportSchemaAdminServerService).SetEventSchemaEnabled(ctx, reqbody.(*SetEventSchemaEnabledReq))
+	}
+
+	var rsp interface{}
+	rsp, err = filters.Filter(ctx, req, handleFunc)
+	if err != nil {
+		return nil, err
+	}
+	return rsp, nil
+}
+
+// ReportSchemaAdminServerServer_ServiceDesc descriptor for server.RegisterService.
+var ReportSchemaAdminServerServer_ServiceDesc = server.ServiceDesc{
+	ServiceName: "oj.report.ReportSchemaAdminServer",
+	HandlerType: ((*ReportSchemaAdminServerService)(nil)),
+	Methods: []server.Method{
+		{
+			Name: "/oj.report.ReportSchemaAdminServer/ListEventSchemas",
+			Func: ReportSchemaAdminServerService_ListEventSchemas_Handler,
+		},
+		{
+			Name: "/oj.report.ReportSchemaAdminServer/UpsertEventSchema",
+			Func: ReportSchemaAdminServerService_UpsertEventSchema_Handler,
+		},
+		{
+			Name: "/oj.report.ReportSchemaAdminServer/SetEventSchemaEnabled",
+			Func: ReportSchemaAdminServerService_SetEventSchemaEnabled_Handler,
+		},
+	},
+}
+
+// RegisterReportSchemaAdminServerService registers service.
+func RegisterReportSchemaAdminServerService(s server.Service, svr ReportSchemaAdminServerService) {
+	if err := s.Register(&ReportSchemaAdminServerServer_ServiceDesc, svr); err != nil {
+		panic(fmt.Sprintf("ReportSchemaAdminServer register error:%v", err))
+	}
+}
+
 // START --------------------------------- Default Unimplemented Server Service --------------------------------- START
 
 type UnimplementedReportIngestServer struct{}
@@ -67,6 +158,23 @@ type UnimplementedReportIngestServer struct{}
 // SubmitEvents SubmitEvents 批量上报事件
 func (s *UnimplementedReportIngestServer) SubmitEvents(ctx context.Context, req *SubmitEventsReq) (*SubmitEventsRsp, error) {
 	return nil, errors.New("rpc SubmitEvents of service ReportIngestServer is not implemented")
+}
+
+type UnimplementedReportSchemaAdminServer struct{}
+
+// ListEventSchemas ListEventSchemas 列出全部事件定义（含禁用事件）
+func (s *UnimplementedReportSchemaAdminServer) ListEventSchemas(ctx context.Context, req *ListEventSchemasReq) (*ListEventSchemasRsp, error) {
+	return nil, errors.New("rpc ListEventSchemas of service ReportSchemaAdminServer is not implemented")
+}
+
+// UpsertEventSchema UpsertEventSchema 新增或更新事件定义，按 eventName + eventVersion 定位
+func (s *UnimplementedReportSchemaAdminServer) UpsertEventSchema(ctx context.Context, req *UpsertEventSchemaReq) (*UpsertEventSchemaRsp, error) {
+	return nil, errors.New("rpc UpsertEventSchema of service ReportSchemaAdminServer is not implemented")
+}
+
+// SetEventSchemaEnabled SetEventSchemaEnabled 启用或禁用事件定义
+func (s *UnimplementedReportSchemaAdminServer) SetEventSchemaEnabled(ctx context.Context, req *SetEventSchemaEnabledReq) (*SetEventSchemaEnabledRsp, error) {
+	return nil, errors.New("rpc SetEventSchemaEnabled of service ReportSchemaAdminServer is not implemented")
 }
 
 // END --------------------------------- Default Unimplemented Server Service --------------------------------- END
@@ -104,6 +212,85 @@ func (c *ReportIngestServerClientProxyImpl) SubmitEvents(ctx context.Context, re
 	callopts = append(callopts, c.opts...)
 	callopts = append(callopts, opts...)
 	rsp := &SubmitEventsRsp{}
+	if err := c.client.Invoke(ctx, req, rsp, callopts...); err != nil {
+		return nil, err
+	}
+	return rsp, nil
+}
+
+// ReportSchemaAdminServerClientProxy defines service client proxy
+type ReportSchemaAdminServerClientProxy interface {
+	// ListEventSchemas ListEventSchemas 列出全部事件定义（含禁用事件）
+	ListEventSchemas(ctx context.Context, req *ListEventSchemasReq, opts ...client.Option) (rsp *ListEventSchemasRsp, err error)
+	// UpsertEventSchema UpsertEventSchema 新增或更新事件定义，按 eventName + eventVersion 定位
+	UpsertEventSchema(ctx context.Context, req *UpsertEventSchemaReq, opts ...client.Option) (rsp *UpsertEventSchemaRsp, err error)
+	// SetEventSchemaEnabled SetEventSchemaEnabled 启用或禁用事件定义
+	SetEventSchemaEnabled(ctx context.Context, req *SetEventSchemaEnabledReq, opts ...client.Option) (rsp *SetEventSchemaEnabledRsp, err error)
+}
+
+type ReportSchemaAdminServerClientProxyImpl struct {
+	client client.Client
+	opts   []client.Option
+}
+
+var NewReportSchemaAdminServerClientProxy = func(opts ...client.Option) ReportSchemaAdminServerClientProxy {
+	return &ReportSchemaAdminServerClientProxyImpl{client: client.DefaultClient, opts: opts}
+}
+
+func (c *ReportSchemaAdminServerClientProxyImpl) ListEventSchemas(ctx context.Context, req *ListEventSchemasReq, opts ...client.Option) (*ListEventSchemasRsp, error) {
+	ctx, msg := codec.WithCloneMessage(ctx)
+	defer codec.PutBackMessage(msg)
+	msg.WithClientRPCName("/oj.report.ReportSchemaAdminServer/ListEventSchemas")
+	msg.WithCalleeServiceName(ReportSchemaAdminServerServer_ServiceDesc.ServiceName)
+	msg.WithCalleeApp("")
+	msg.WithCalleeServer("")
+	msg.WithCalleeService("ReportSchemaAdminServer")
+	msg.WithCalleeMethod("ListEventSchemas")
+	msg.WithSerializationType(codec.SerializationTypePB)
+	callopts := make([]client.Option, 0, len(c.opts)+len(opts))
+	callopts = append(callopts, c.opts...)
+	callopts = append(callopts, opts...)
+	rsp := &ListEventSchemasRsp{}
+	if err := c.client.Invoke(ctx, req, rsp, callopts...); err != nil {
+		return nil, err
+	}
+	return rsp, nil
+}
+
+func (c *ReportSchemaAdminServerClientProxyImpl) UpsertEventSchema(ctx context.Context, req *UpsertEventSchemaReq, opts ...client.Option) (*UpsertEventSchemaRsp, error) {
+	ctx, msg := codec.WithCloneMessage(ctx)
+	defer codec.PutBackMessage(msg)
+	msg.WithClientRPCName("/oj.report.ReportSchemaAdminServer/UpsertEventSchema")
+	msg.WithCalleeServiceName(ReportSchemaAdminServerServer_ServiceDesc.ServiceName)
+	msg.WithCalleeApp("")
+	msg.WithCalleeServer("")
+	msg.WithCalleeService("ReportSchemaAdminServer")
+	msg.WithCalleeMethod("UpsertEventSchema")
+	msg.WithSerializationType(codec.SerializationTypePB)
+	callopts := make([]client.Option, 0, len(c.opts)+len(opts))
+	callopts = append(callopts, c.opts...)
+	callopts = append(callopts, opts...)
+	rsp := &UpsertEventSchemaRsp{}
+	if err := c.client.Invoke(ctx, req, rsp, callopts...); err != nil {
+		return nil, err
+	}
+	return rsp, nil
+}
+
+func (c *ReportSchemaAdminServerClientProxyImpl) SetEventSchemaEnabled(ctx context.Context, req *SetEventSchemaEnabledReq, opts ...client.Option) (*SetEventSchemaEnabledRsp, error) {
+	ctx, msg := codec.WithCloneMessage(ctx)
+	defer codec.PutBackMessage(msg)
+	msg.WithClientRPCName("/oj.report.ReportSchemaAdminServer/SetEventSchemaEnabled")
+	msg.WithCalleeServiceName(ReportSchemaAdminServerServer_ServiceDesc.ServiceName)
+	msg.WithCalleeApp("")
+	msg.WithCalleeServer("")
+	msg.WithCalleeService("ReportSchemaAdminServer")
+	msg.WithCalleeMethod("SetEventSchemaEnabled")
+	msg.WithSerializationType(codec.SerializationTypePB)
+	callopts := make([]client.Option, 0, len(c.opts)+len(opts))
+	callopts = append(callopts, c.opts...)
+	callopts = append(callopts, opts...)
+	rsp := &SetEventSchemaEnabledRsp{}
 	if err := c.client.Invoke(ctx, req, rsp, callopts...); err != nil {
 		return nil, err
 	}

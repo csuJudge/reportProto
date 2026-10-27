@@ -20,3 +20,54 @@ message SubmitEventsRsp {
     int32 acceptedCount = 3; // 接收成功的事件数
     repeated EventReject rejected = 4; // 拒绝的事件列表
 }
+
+// ReportSchemaAdminServer 事件定义管理接口，供管理后台配置事件使用。
+service ReportSchemaAdminServer {
+    // ListEventSchemas 列出全部事件定义（含禁用事件）
+    rpc ListEventSchemas(ListEventSchemasReq) returns (ListEventSchemasRsp) {}
+    // UpsertEventSchema 新增或更新事件定义，按 eventName + eventVersion 定位
+    rpc UpsertEventSchema(UpsertEventSchemaReq) returns (UpsertEventSchemaRsp) {}
+    // SetEventSchemaEnabled 启用或禁用事件定义
+    rpc SetEventSchemaEnabled(SetEventSchemaEnabledReq) returns (SetEventSchemaEnabledRsp) {}
+}
+
+// EventSchema 是一条事件定义。
+message EventSchema {
+    string eventName        = 1; // 事件名，小写 snake_case
+    int32 eventVersion      = 2; // 事件版本
+    string title            = 3; // 事件标题
+    string description      = 4; // 事件用途说明
+    string payloadSchemaJson = 5; // payload 校验规则 JSON 文本
+    string factTable        = 6; // 对应 ClickHouse 事实表，空表示没有
+    bool enabled            = 7; // 是否启用
+    int32 createdBy         = 8; // 注册人用户 ID
+}
+
+message ListEventSchemasReq {
+}
+
+message ListEventSchemasRsp {
+    string message = 1;               // 返回信息
+    int32 code = 2;                   // 返回码
+    repeated EventSchema schemas = 3; // 事件定义列表
+}
+
+message UpsertEventSchemaReq {
+    EventSchema schema = 1; // 事件定义，按 eventName + eventVersion 定位
+}
+
+message UpsertEventSchemaRsp {
+    string message = 1; // 返回信息
+    int32 code = 2;     // 返回码
+}
+
+message SetEventSchemaEnabledReq {
+    string eventName   = 1; // 事件名
+    int32 eventVersion = 2; // 事件版本
+    bool enabled       = 3; // 是否启用
+}
+
+message SetEventSchemaEnabledRsp {
+    string message = 1; // 返回信息
+    int32 code = 2;     // 返回码
+}
